@@ -7,6 +7,7 @@
             v-model="query" :placeholder="defaultPlaceholder" title="search"
             @keyup.enter="submit"
             @focus="focus"
+            @keyup.13="submit"
             @blur="close">
       <v-btn flat icon v-show="onFocus" @click.prevent="close" small class="close-btn">
         <v-icon small>close</v-icon>

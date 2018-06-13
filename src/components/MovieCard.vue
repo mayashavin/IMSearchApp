@@ -10,7 +10,7 @@
             <v-flex class="movie-card--details">
               <div class="movie-card--title">{{movie.Title}}</div>
               <div class="subheading movie-card--text grey--text">({{movie.Year}})</div>
-              <div class="body-1 movie-card--text grey--text">{{movie.Type}}</div>
+              <div class="body-1 movie-card--text grey--text" v-if="movie.Type !== 'movie'">{{movie.Type}}</div>
               <!-- <v-btn flat icon>
                 <v-icon>arrow_forward_ios</v-icon>
               </v-btn> -->
