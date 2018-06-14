@@ -5,7 +5,7 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    movies: [],
+    movies: undefined,
     onSearching: false
   },
   mutations: {

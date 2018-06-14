@@ -1,25 +1,21 @@
 <template>
-  <v-layout style="flex-direction: column;">
-   <v-flex class="movie-card--wrapper mobile">
-      <v-card :to="movieLink">
-        <v-container fluid grid-list-lg>
-          <v-layout row class="movie-card--container">
-            <v-flex>
-              <img v-bind:src="movie.Poster" class="movie-card--poster"/>
+  <!-- <v-layout style="flex-direction: column;" class="movie-card--wrapper mobile"> -->
+      <v-card :to="movieLink" class="movie-card--container">
+            <v-flex class="movie-card-poster-wrapper">
+              <img v-bind:src="posterLink" class="movie-card--poster" v-if="posterLink !== 'N/A'" :alt="movie.Title"/>
+              <div class="movie-card-no-poster" v-else><v-icon x-large color="grey darken-2">local_movies</v-icon></div>
             </v-flex>
             <v-flex class="movie-card--details">
               <div class="movie-card--title">{{movie.Title}}</div>
-              <div class="subheading movie-card--text grey--text">({{movie.Year}})</div>
-              <div class="body-1 movie-card--text grey--text" v-if="movie.Type !== 'movie'">{{movie.Type}}</div>
+              <div class="caption movie-card--text grey--text">({{movie.Year}})</div>
+              <div class="caption movie-card--text grey--text" v-if="movie.Type !== 'movie'">{{movie.Type}}</div>
               <!-- <v-btn flat icon>
                 <v-icon>arrow_forward_ios</v-icon>
               </v-btn> -->
-            </v-flex>
-          </v-layout>
-        </v-container>
-      </v-card>
     </v-flex>
-  </v-layout>
+
+      </v-card>
+  <!-- </v-layout> -->
 
 </template>
 <script>
@@ -32,7 +28,10 @@ export default {
   },
   computed: {
     movieLink () {
-      return `/movie/${this.movie.imdbID}`
+      return `/movie/${this.movie.ID}`
+    },
+    posterLink () {
+      return `${this.movie.Poster}`
     }
   }
 }
@@ -40,27 +39,41 @@ export default {
 <style lang="less" scoped>
 .movie-card--container{
   display: grid;
-  grid-template-columns: auto auto;
-  grid-gap: 0.5rem;
+  grid-gap: 0.2rem;
+  grid-template-rows: 17rem;
+
+  .movie-card-poster-wrapper{
+    height: 17rem;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+  }
 
   .movie-card--poster{
-    height: 10rem;
+    height: 15rem;
+    width: 11rem;
+    object-fit: contain;
+  }
+
+  .movie-card-no-poster{
+    display: flex;
+    height: 15rem;
+    width: 11rem;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid #616161;
   }
 
   .movie-card--details{
     display: flex;
     align-items: flex-start;
     flex-direction: column;
-
-    &.sticky{
-      position: absolute;
-      bottom: 0;
-      opacity: 0;
-    }
+    padding: 0 1rem 0.5rem 1rem;
 
     .movie-card--title{
       text-align: left;
-      font-size: 1.4rem;
+      font-size: 1.1rem;
     }
 
     .movie-card--text{
@@ -68,28 +81,24 @@ export default {
     }
   }
 }
+@media (max-width: 768px){
+  .movie-card--container{
+  grid-template-rows: 9.5rem;
 
-.movie-card--wrapper{
-  &.desktop{
-    .movie-card--container{
-      display: flex;
-      position: relative;
+  .movie-card-poster-wrapper{
+    height: 10rem;
+  }
 
-      .movie-card--poster{
-        height: 20rem;
-      }
+  .movie-card--poster{
+    height: 8rem;
+    width: 6rem;
+  }
 
-      &:hover{
-        .movie-card--details{
-          opacity: 0.8;
-          transform: ease-in 0.3s;
-        }
-      }
-    }
+  .movie-card-no-poster{
+    height: 8rem;
+    width: 6rem;
   }
 }
-
-@media (max-width: 768px){
 }
 </style>
 

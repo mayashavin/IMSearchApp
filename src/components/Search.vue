@@ -14,11 +14,10 @@
       </v-btn>
     </div>
     <v-btn flat icon @click.prevent="toogleAdvancedSearch">
-      <v-icon :class="advancedSearchBtnlass">tune</v-icon>
+      <v-icon :class="advancedSearchBtnlass">filter_list</v-icon>
     </v-btn>
   </div>
   <div class="advanced-search-box" v-show="withAdvanceSearch">
-    tbd
   </div>
 </div>
 
@@ -67,13 +66,14 @@ export default {
 <style lang="less" scoped>
 .search-box-wrapper{
   width: 100%;
+  max-width: 700px;
+  position: relative;
 
   .search-box-section{
     display:grid;
     grid-template-columns: 1fr auto;
     align-items: center;
     justify-content: center;
-    margin: 1rem;
 
     .search-box{
       padding: 0.5rem;
@@ -105,7 +105,16 @@ export default {
         margin-right: 0.5rem;
       }
 
+
+
     }
+  }
+
+  .advanced-search-box{
+    position: absolute;
+    width: 100%;
+    z-index: 2;
+    padding: 1rem;
   }
 }
 </style>

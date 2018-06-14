@@ -3,19 +3,18 @@
     <div class="main-container">
       <movies-list :movies="movies"></movies-list>
     </div>
-    <div class="progress-bar" v-show="onSearching">
-      <v-progress-circular indeterminate color="blue-grey"></v-progress-circular>
-      <div class="white--text progress-text">Hold on, searching now...</div>
-    </div>
+    <progress-bar :onShow="onSearching" :msg="onSearchMsg"></progress-bar>
   </v-layout>
 </template>
 <script>
 import MoviesList from '@/components/MoviesList'
+import ProgressBar from '@/components/ProgressBar'
 
 export default {
   name: 'Home',
   components: {
-    'movies-list': MoviesList
+    'movies-list': MoviesList,
+    'progress-bar': ProgressBar
   },
   computed: {
     movies () {
@@ -23,6 +22,11 @@ export default {
     },
     onSearching () {
       return this.$store.getters.onSearching
+    }
+  },
+  data () {
+    return {
+      onSearchMsg: 'Hold on, searching now...'
     }
   }
 }
@@ -37,20 +41,7 @@ export default {
     }
   }
 
-  .progress-bar{
-    z-index: 2;
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
 
-    .progress-text{
-      padding: 0.5rem 0;
-    }
-  }
 </style>
 
 

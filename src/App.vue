@@ -1,14 +1,14 @@
 <template>
   <div id="app">
     <v-app dark class="white--text">
-      <v-toolbar fixed flat class="app-toolbar" height="auto">
+      <v-toolbar fixed flat class="app-toolbar">
         <v-btn icon flat v-if="!isHomeScreen" @click.prevent="back">
           <v-icon>arrow_back_ios</v-icon>
         </v-btn>
         <v-toolbar-title class="app-title">IMSearch App</v-toolbar-title>
         <search v-on:search-query="triggerSearch" :class="searchExtraClass"></search>
       </v-toolbar>
-      <main>
+      <main id="main-app-container">
         <router-view></router-view>
       </main>
     </v-app>
@@ -27,6 +27,14 @@ export default {
   methods: {
     triggerSearch (query, specs) {
       if (query) {
+        this.$router.push('/')
+
+        window.scroll({
+          top: 0,
+          left: 0,
+          behavior: 'smooth'
+        })
+
         this.$store.commit('updateOnSearching', true)
 
         let data = new Map([['s', query]])
@@ -42,7 +50,7 @@ export default {
       }
     },
     back () {
-      this.$router.go(-1)
+      this.$router.back()
     }
   },
   computed: {
@@ -74,11 +82,19 @@ body {
   color: #2c3e50;
 }
 
+.app-toolbar{
+  height: auto !important;
+
+  .toolbar__content{
+    justify-content: space-between;
+  }
+}
+
 main {
   text-align: center;
-  margin-top: 76px;
+  margin-top: 56px;
   display: flex;
-  height: ~"calc(100% - 76px)";
+  height: ~"calc(100% - 56px)";
 }
 
 @media (max-width: 768px){
