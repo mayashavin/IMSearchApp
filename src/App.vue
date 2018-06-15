@@ -17,6 +17,7 @@
 
 <script>
 import Search from '@/components/Search'
+// import LocalDB from '@/localDB/localDB.js'
 import omdb from '@/omdbSDK/omdb.js'
 
 export default {
@@ -36,6 +37,7 @@ export default {
         })
 
         this.$store.commit('updateOnSearching', true)
+        this.$store.commit('updateSearchedTerm', { query })
 
         let data = new Map([['s', query]])
 
@@ -62,6 +64,9 @@ export default {
         'with-back-btn': !this.isHomeScreen
       }
     }
+  },
+  beforeCreate () {
+
   }
 }
 </script>
@@ -104,7 +109,7 @@ main {
 
   .app-toolbar{
     .search-box-wrapper{
-      margin-left: 0.5rem;
+      margin-left: 0;
       margin-right: 0 !important;
 
       &.with-back-btn{

@@ -17,8 +17,33 @@
       <v-icon :class="advancedSearchBtnlass">filter_list</v-icon>
     </v-btn>
   </div>
-  <div class="advanced-search-box" v-show="withAdvanceSearch">
-  </div>
+  <v-card class="searchbox-sticky-section grey darken-4" v-show="onFocus">
+    <div class="searchbox-lastSearch-section" v-show="lastQuery && lastQuery.length > 0">
+      <div class="searchbox-lastSearch-heading-wrapper">
+        <div class="searchbox-lastSearch-heading">Recent</div>
+        <v-btn small flat @click.prevent="clear" class="amber--text">
+          clear
+          <v-icon small right dark class="searchbox-clear-btn-icon">highlight_off</v-icon></v-btn>
+      </div>
+      <v-list class="searchbox-lastSearch-list grey darken-4">
+          <template v-for="(item, index) in lastQuery">
+            <v-list-tile :key="index">
+              <v-list-tile-content ripple
+                @click.prevent="search(item)">
+                <v-list-tile-title v-text="item" class="grey--text caption"></v-list-tile-title>
+              </v-list-tile-content>
+              <v-list-tile-action>
+                <v-icon dark small class="grey--text">keyboard_arrow_right</v-icon>
+              </v-list-tile-action>
+            </v-list-tile>
+            <v-divider v-if="index + 1 < lastQuery.length" :key="index"></v-divider>
+          </template>
+      </v-list>
+    </div>
+    <div class="advanced-search-box" v-show="withAdvanceSearch">
+
+    </div>
+  </v-card>
 </div>
 
 </template>
@@ -46,6 +71,15 @@ export default {
     close () {
       this.onFocus = false
       this.query = ''
+    },
+    clear () {
+      let query = ''
+      let toClear = true
+      this.$store.commit('updateSearchedTerm', { query, toClear })
+    },
+    search (value) {
+      this.query = value
+      this.submit()
     }
   },
   computed: {
@@ -59,6 +93,9 @@ export default {
       return {
         'active': this.onFocus
       }
+    },
+    lastQuery () {
+      return this.$store.getters.searchedTerms || []
     }
   }
 }
@@ -74,6 +111,7 @@ export default {
     grid-template-columns: 1fr auto;
     align-items: center;
     justify-content: center;
+    margin-left: 0.5rem;
 
     .search-box{
       padding: 0.5rem;
@@ -110,11 +148,25 @@ export default {
     }
   }
 
-  .advanced-search-box{
+  .searchbox-sticky-section{
     position: absolute;
     width: 100%;
     z-index: 2;
-    padding: 1rem;
+    padding: 0 1rem;
+  }
+
+  .searchbox-lastSearch-heading-wrapper{
+    display:flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .searchbox-lastSearch-heading{
+      text-transform: uppercase;
+    }
+  }
+
+  .searchbox-clear-btn-icon{
+    margin-left:5px;
   }
 }
 </style>

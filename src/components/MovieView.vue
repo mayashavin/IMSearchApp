@@ -107,13 +107,16 @@
     </v-card>
     <progress-bar :onShow="onLoad" :msg="loadMsg"></progress-bar>
     <div class="movie-view-actions-wrapper" :class="actionsShowClass">
-      <v-btn fab dark small color="orange darken-3" class="movie-view-action-btn" tooltip="Buy ticket" @click.prevent="orderTicket">
+      <v-btn fab dark small color="orange darken-3" class="movie-view-action-btn"
+            tooltip="Buy ticket" @click.prevent="orderTicket" v-if="comingSoon">
         <v-icon dark class="movie-view-action-icon">local_play</v-icon>
       </v-btn>
-      <v-btn fab dark small color="blue darken-2" class="movie-view-action-btn" tooltip="Visit website" @click.prevent="goToWebsite">
+      <v-btn fab dark small color="blue darken-2" class="movie-view-action-btn"
+            tooltip="Visit website" @click.prevent="goToWebsite">
         <v-icon dark class="movie-view-action-icon">public</v-icon>
       </v-btn>
-      <v-btn fab dark medium color="green darken-3" class="movie-view-action-btn" @click.prevent="toggleActionList">
+      <v-btn fab dark medium color="green darken-3" class="movie-view-action-btn"
+            @click.prevent="toggleActionList">
         <v-icon dark class="movie-view-action-icon">more_vert</v-icon>
       </v-btn>
     </div>
@@ -257,6 +260,24 @@ export default {
         'movie-view-actions-active': this.actionsShow,
         '': !this.actionsShow
       }
+    },
+    comingSoon () {
+      let comingSoon = false
+      const MS_PER_DAY = 1000 * 36 * 24
+      const period = 15
+
+      if (this.movie.Released) {
+        let releaseDay = this.getUTCTime(new Date(this.movie.Released))
+        let today = this.getUTCTime(new Date())
+
+        let timeDiff = Math.floor(releaseDay - today)
+
+        if (!isNaN(timeDiff)) {
+          comingSoon = Math.abs(timeDiff / MS_PER_DAY) < period
+        }
+      }
+
+      return comingSoon
     }
   },
   methods: {
@@ -282,7 +303,11 @@ export default {
     },
     orderTicket () {
       console.log('Ordering ticket')
+      window.open('https://www.cinema-city.co.il')
       this.toggleActionList()
+    },
+    getUTCTime (date) {
+      return Date.UTC(date.getFullYear(), date.getMonth(), date.getDate())
     }
   }
 }
