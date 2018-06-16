@@ -3,13 +3,18 @@
   "short_name": "imsearch",
   "icons": [
     {
-      "src": "/static/img/icons/android-chrome-192x192.png",
-      "sizes": "192x192",
+      "src": "/static/img/icons/imsearch_128",
+      "sizes": "128x128",
       "type": "image/png"
     },
     {
-      "src": "/static/img/icons/android-chrome-512x512.png",
+      "src": "/static/img/icons/imsearch_512",
       "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "/static/img/icons/imsearch_256",
+      "sizes": "256x256",
       "type": "image/png"
     }
   ],

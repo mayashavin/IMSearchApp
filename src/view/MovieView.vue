@@ -1,15 +1,15 @@
 <template>
   <v-layout>
     <v-card flat class="movie-view--card" v-show="!onLoad">
-      <v-card-media v-bind:src="movie.Poster" flat  height="17rem" class="poster--background">
+      <v-card-media v-bind:src="movie.Poster" flat  height="25rem" class="poster--background">
         <v-card-text v-if="movie.Poster === 'N/A'" class="text-xs-center title grey--text text--darken-2 movie-poster--text-wrapper">
           <div class="movie-poster--text">{{movie.Title}}</div></v-card-text>
       </v-card-media>
       <div class="movie-details--container grey lighten-3" >
-        <a :href="websiteLink" target="_blank" :alt="movie.Title" class="movie-view-poster-wrapper white">
+        <div class="movie-view-poster-wrapper white">
           <img class="poster" v-bind:src="movie.Poster" :alt="movie.Title" v-if="movie.Poster !== 'N/A'"/>
           <div class="movie-details-no-poster grey darken-3" v-else><v-icon x-large color="grey darken-2">local_movies</v-icon></div>
-        </a>
+        </div>
         <v-avatar dark color="amber" class="movie-rating-label movie-square-label" size="4.5rem">
           <h4 class="movie-rating">{{movie.Rating}}</h4>
         </v-avatar>
@@ -35,8 +35,14 @@
           </div>
         </v-card-title>
         <div class="movie-subdetails--section grey darken-4 black--text">
+          <div class="grey lighten-3">
+            <v-btn :class="favoriteBtn.class" @click.prevent="toogleFavorite">
+              <v-icon left dark >{{favoriteBtn.icon}}</v-icon>
+              {{favoriteBtn.label}}
+            </v-btn>
+          </div>
           <div class="movie-ratings--section grey lighten-3" v-if="movie.Ratings">
-            <div v-for="rating in ratings" :key="rating.Source" class="movie-rating-list-item">
+            <div v-for="rating in ratings" :key="rating.Source" class="movie-rating-list-item" v-if="rating.Source !== 'IMDB'">
               <v-avatar :class="rating.ScoreColor" class="movie-rating-score-container white--text movie-square-label" size="3.5rem">
                 <div class="movie-rating-score">{{rating.Value}}</div>
                 <div class="movie-rating-base" v-if="rating.Base">{{rating.Base}}</div>
@@ -139,6 +145,8 @@ export default {
 
     omdb.retrieve(data).then(result => {
       this.movie = result
+      let favorites = this.$store.getters.favorites
+      this.isFavorite = favorites && favorites.indexOf(this.id) !== -1
       this.onLoad = false
     })
   },
@@ -147,6 +155,7 @@ export default {
       movie: {},
       onLoad: true,
       loadMsg: 'One tiny moment...',
+      isFavorite: false,
       actionsShow: false
     }
   },
@@ -154,14 +163,21 @@ export default {
     websiteLink () {
       return this.movie.Website && this.movie.Website !== 'N/A' ? this.movie.Website : `https://www.imdb.com/title/${this.$route.params.id}`
     },
+    favoriteBtn () {
+      return {
+        label: this.isFavorite ? `Remove from favorite` : 'Add to favorite',
+        icon: this.isFavorite ? 'favorite' : 'favorite_border',
+        class: this.isFavorite ? 'favorite-btn-remove btn--outline pink--text' : 'pink white--text'
+      }
+    },
     ratings () {
       const sources = {
-        'Internet Movie Database': 'IMBD',
+        'Internet Movie Database': 'IMDB',
         'Rotten Tomatoes': 'RT',
         'Metacritic': 'Metascore'
       }
       const color = {
-        IMBD: {
+        IMDB: {
           score: ['amber darken-1'],
           source: ['amber--text text--darken-1']
         },
@@ -170,7 +186,7 @@ export default {
           source: ['light-green--text text--darken-1']
         },
         RT: {
-          score: ['deep-orange darken-1'],
+          score: ['deep-orange lighten-1'],
           source: ['deep-orange--text text--darken-1']
         }
       }
@@ -308,6 +324,14 @@ export default {
     },
     getUTCTime (date) {
       return Date.UTC(date.getFullYear(), date.getMonth(), date.getDate())
+    },
+    toogleFavorite () {
+      this.isFavorite = !this.isFavorite
+
+      this.$store.commit('updateFavorites', {
+        id: this.id,
+        isAdd: this.isFavorite
+      })
     }
   }
 }
@@ -322,6 +346,7 @@ export default {
 }
 
 .poster--background{
+
   .card__media__background{
     background-position-y: top !important;
 
@@ -345,20 +370,21 @@ export default {
 .movie-details--container{
   position: relative;
   display: grid;
-  grid-template-columns: 8rem auto;
+  grid-template-columns: 17rem auto;
   grid-template-rows: auto auto;
-  grid-gap: 0.5rem;
+  grid-column-gap: 0.5rem;
 
   .movie-view-poster-wrapper{
-    height: 10rem;
-    width: 7rem;
+    height: 19rem;
+    width: 13rem;
+    left: 3rem;
+    top: -10rem;
+
     display: flex;
     align-items: center;
     position: absolute;
     text-decoration: none;
     outline: none;
-    top: -5rem;
-    left: 1.5rem;
     box-shadow: 4px 3px 5px -1px rgba(0, 0, 0, 0.2), 0 6px 10px 0 rgba(0, 0, 0, 0.14), 0 1px 18px 0 rgba(0, 0, 0, 0.12);
 
     .movie-details-no-poster{
@@ -372,13 +398,13 @@ export default {
   }
 
   .poster{
-    width: 7rem;
+    width: 13rem;
   }
 
   .movie-rating-label{
     position: absolute;
+    right: 5rem;
     top: -35px;
-    right: 1rem;
     box-shadow: 0 3px 5px -1px rgba(0,0,0,.2), 0 6px 10px 0 rgba(0,0,0,.14), 0 1px 18px 0 rgba(0,0,0,.12);
 
     .movie-play--icon{
@@ -453,9 +479,18 @@ export default {
     grid-column-start: 1;
     grid-column-end: 3;
 
+    .favorite-btn-remove{
+      .btn__content{
+        &::before{
+          background-color:transparent;
+        }
+      }
+    }
+
     .movie-ratings--section{
       display:flex;
       justify-content: space-evenly;
+      padding-top: 0.5rem;
     }
 
     .movie-rating-score-container{
@@ -600,6 +635,30 @@ export default {
       right: 100%;
       white-space: nowrap;
       box-shadow: 0 0 4px rgba(0, 0, 0, .14), 0 4px 8px rgba(0, 0, 0, .28);
+    }
+  }
+}
+
+@media (max-width: 768px){
+  .poster--background{
+    height: 17rem !important;
+  }
+
+  .movie-details--container{
+    grid-template-columns: 8rem auto;
+
+    .movie-view-poster-wrapper{
+      height: 10rem;
+      width: 7rem;
+      top: -5rem;
+      left: 1.5rem;
+      .poster{
+        width: 7rem;
+      }
+    }
+
+    .movie-rating-label{
+      right: 1rem;
     }
   }
 }

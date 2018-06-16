@@ -18,11 +18,21 @@ export default new Vuex.Store({
     onSearching: false,
     user: user,
     searchedTerms: LocalDB.getValue(user.SearchTermsDB),
-    favorites: LocalDB.getValue(user.FavoriteDB)
+    favorites: LocalDB.getValue(user.FavoriteDB),
+    stack: [],
+    isGoingBack: false
   },
   mutations: {
-    updateMovies (state, newValue) {
-      Vue.set(state, 'movies', newValue)
+    updateMovies (state, movies) {
+      let favorites = state.favorites
+
+      for (let i = 0; i < movies.length; i++) {
+        let movie = movies[i]
+
+        movie.isFavorite = favorites && favorites.indexOf(movie.ID) !== -1
+      }
+
+      Vue.set(state, 'movies', movies)
     },
     updateOnSearching (state, newValue) {
       Vue.set(state, 'onSearching', newValue)
@@ -46,16 +56,30 @@ export default new Vuex.Store({
 
       Vue.set(state, 'searchedTerms', lastQueries)
     },
-    updateFavorites (state, newTerm) {
-      let favorites = LocalDB.getValue(state.user.FavoriteDB)
+    updateFavorites (state, { id, isAdd }) {
+      let favorites = LocalDB.getValue(state.user.FavoriteDB) || []
 
-      if (newTerm) {
-        favorites.push(newTerm)
+      if (id) {
+        if (isAdd) {
+          favorites.push(id)
+        } else {
+          let index = favorites.indexOf(id)
+
+          if (index !== -1) {
+            favorites.splice(index, 1)
+          }
+        }
       }
 
       LocalDB.setValue(user.FavoriteDB, favorites)
 
       Vue.set(state, 'favorites', favorites)
+    },
+    push (state, page) {
+      state.stack.push(page)
+    },
+    toogleGoingBack (state, shouldGoBack) {
+      state.isGoingBack = shouldGoBack
     }
   },
   getters: {
@@ -63,6 +87,8 @@ export default new Vuex.Store({
     onSearching: state => state.onSearching,
     user: state => state.user,
     searchedTerms: state => state.searchedTerms,
-    favorites: state => state.favorites
+    favorites: state => state.favorites,
+    stack: state => state.stack,
+    isGoingBack: state => state.isGoingBack
   }
 })

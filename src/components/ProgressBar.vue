@@ -12,7 +12,7 @@ export default {
 </script>
 <style lang="less">
   .progress-bar{
-    z-index: 2;
+    z-index: 4;
     width: 100%;
     height: 100%;
     position: absolute;

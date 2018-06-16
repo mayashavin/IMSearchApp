@@ -2,46 +2,47 @@
 <div class="search-box-wrapper">
   <div class="search-box-section">
     <div class="search-box" :class="searchBoxClass">
-      <v-icon class="search-icon">search</v-icon>
+      <v-icon class="search-icon" :class="searchIconColor">search</v-icon>
       <input type="text" id="search-box--input" class="search-box--input white--text"
             v-model="query" :placeholder="defaultPlaceholder" title="search"
             @keyup.enter="submit"
             @focus="focus"
-            @keyup.13="submit"
-            @blur="close">
-      <v-btn flat icon v-show="onFocus" @click.prevent="close" small class="close-btn">
+            @keyup.13="submit">
+      <v-btn flat icon v-show="onFocus" id="close-search-btn" @click.prevent="close" small class="close-btn">
         <v-icon small>close</v-icon>
       </v-btn>
     </div>
-    <v-btn flat icon @click.prevent="toogleAdvancedSearch">
-      <v-icon :class="advancedSearchBtnlass">filter_list</v-icon>
-    </v-btn>
   </div>
   <v-card class="searchbox-sticky-section grey darken-4" v-show="onFocus">
+    <div class="advanced-search-box">
+      <div class="searchbox-lastSearch-heading-wrapper">
+        <div class="searchbox-lastSearch-heading">Filter by year</div>
+      </div>
+      <input type="number" id="searchbox--input-year" min=1000 max=9999 class="search-box--input-advanced white--text"
+          v-model="year" :placeholder="yearPlaceholder" title="search by year"
+          @focus="focus"
+          @keyup.enter="submit">
+    </div>
     <div class="searchbox-lastSearch-section" v-show="lastQuery && lastQuery.length > 0">
       <div class="searchbox-lastSearch-heading-wrapper">
         <div class="searchbox-lastSearch-heading">Recent</div>
         <v-btn small flat @click.prevent="clear" class="amber--text">
           clear
-          <v-icon small right dark class="searchbox-clear-btn-icon">highlight_off</v-icon></v-btn>
+        </v-btn>
       </div>
       <v-list class="searchbox-lastSearch-list grey darken-4">
           <template v-for="(item, index) in lastQuery">
-            <v-list-tile :key="index">
-              <v-list-tile-content ripple
-                @click.prevent="search(item)">
+            <v-list-tile :key="index" @click.prevent="search(item)">
+              <v-list-tile-content ripple>
                 <v-list-tile-title v-text="item" class="grey--text caption"></v-list-tile-title>
               </v-list-tile-content>
               <v-list-tile-action>
                 <v-icon dark small class="grey--text">keyboard_arrow_right</v-icon>
               </v-list-tile-action>
             </v-list-tile>
-            <v-divider v-if="index + 1 < lastQuery.length" :key="index"></v-divider>
+            <v-divider v-if="index + 1 < lastQuery.length" :key="item"></v-divider>
           </template>
       </v-list>
-    </div>
-    <div class="advanced-search-box" v-show="withAdvanceSearch">
-
     </div>
   </v-card>
 </div>
@@ -53,17 +54,16 @@ export default {
   data () {
     return {
       query: '',
-      defaultPlaceholder: 'Search for movies',
-      withAdvanceSearch: false,
-      onFocus: false
+      defaultPlaceholder: 'Search for movies by title',
+      onFocus: false,
+      year: '',
+      yearPlaceholder: 'Search by year'
     }
   },
   methods: {
-    toogleAdvancedSearch () {
-      this.withAdvanceSearch = !this.withAdvanceSearch
-    },
     submit () {
-      this.$emit('search-query', this.query)
+      this.onFocus = false
+      this.$emit('search-query', this.query, { byYear: this.year })
     },
     focus () {
       this.onFocus = true
@@ -96,6 +96,12 @@ export default {
     },
     lastQuery () {
       return this.$store.getters.searchedTerms || []
+    },
+    searchIconColor () {
+      return {
+        'white--text': this.onFocus,
+        'grey--text': !this.onFocus
+      }
     }
   }
 }
@@ -112,6 +118,7 @@ export default {
     align-items: center;
     justify-content: center;
     margin-left: 0.5rem;
+    margin-right: 0.5rem;
 
     .search-box{
       padding: 0.5rem;
@@ -142,16 +149,13 @@ export default {
       .search-icon{
         margin-right: 0.5rem;
       }
-
-
-
     }
   }
 
   .searchbox-sticky-section{
     position: absolute;
     width: 100%;
-    z-index: 2;
+    z-index: 6;
     padding: 0 1rem;
   }
 
@@ -163,6 +167,20 @@ export default {
     .searchbox-lastSearch-heading{
       text-transform: uppercase;
     }
+  }
+
+  .search-box--input-advanced{
+    width: 10rem;
+    border-bottom: 1px white solid;
+    margin: 0 1rem;
+    line-height: 1;
+    outline: none;
+    padding: 0.5rem;
+  }
+
+  .advanced-search-box{
+    display: flex;
+    padding: 0.5rem 0;
   }
 
   .searchbox-clear-btn-icon{

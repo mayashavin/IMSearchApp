@@ -8,7 +8,7 @@
         <v-toolbar-title class="app-title">IMSearch App</v-toolbar-title>
         <search v-on:search-query="triggerSearch" :class="searchExtraClass"></search>
       </v-toolbar>
-      <main id="main-app-container">
+      <main id="main-app-container" class="main">
         <router-view></router-view>
       </main>
     </v-app>
@@ -17,7 +17,6 @@
 
 <script>
 import Search from '@/components/Search'
-// import LocalDB from '@/localDB/localDB.js'
 import omdb from '@/omdbSDK/omdb.js'
 
 export default {
@@ -52,7 +51,12 @@ export default {
       }
     },
     back () {
-      this.$router.back()
+      document.getElementById('close-search-btn').click()
+      if (this.$store.getters.isGoingBack) {
+        this.$router.back()
+      } else {
+        this.$router.push('/')
+      }
     }
   },
   computed: {
@@ -64,9 +68,6 @@ export default {
         'with-back-btn': !this.isHomeScreen
       }
     }
-  },
-  beforeCreate () {
-
   }
 }
 </script>
@@ -95,7 +96,7 @@ body {
   }
 }
 
-main {
+.main {
   text-align: center;
   margin-top: 56px;
   display: flex;
