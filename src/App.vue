@@ -5,7 +5,10 @@
         <v-btn icon flat v-if="!isHomeScreen" @click.prevent="back">
           <v-icon>arrow_back_ios</v-icon>
         </v-btn>
-        <v-toolbar-title class="app-title">IMSearch App</v-toolbar-title>
+        <v-toolbar-title class="app-title">
+          <img class="app-title-logo" alt="IMSearch Logo" src="./assets/logo_32.png"/>
+          <div>IMSearch App</div>
+        </v-toolbar-title>
         <search v-on:search-query="triggerSearch" :class="searchExtraClass"></search>
       </v-toolbar>
       <main id="main-app-container" class="main">
@@ -93,6 +96,15 @@ body {
 
   .toolbar__content{
     justify-content: space-between;
+  }
+}
+
+.app-title{
+  display:flex;
+  align-items: center;
+
+  .app-title-logo{
+    margin-right: 0.5rem;
   }
 }
 

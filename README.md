@@ -11,6 +11,9 @@ npm install
 # serve with hot reload at localhost:8080
 npm run dev
 
+#relays your local environment on a distant dns
+ngrok http 8080
+
 # build for production with minification
 npm run build
 
