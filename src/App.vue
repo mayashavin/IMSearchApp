@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <v-app dark class="white--text">
+    <v-app dark class="white--text" v-show="existingUser">
       <v-toolbar fixed flat class="app-toolbar">
         <v-btn icon flat v-if="!isHomeScreen" @click.prevent="back">
           <v-icon>arrow_back_ios</v-icon>
@@ -15,17 +15,34 @@
         <router-view></router-view>
       </main>
     </v-app>
+    <div class="app-welcome black" v-show="!existingUser">
+      <img class="app-welcome-logo" src="./assets/logo.png"/>
+      <h3 class="white--text">Welcome to IM Search</h3>
+      <div class="grey--text">Click on search to start</div>
+      <search v-on:search-query="triggerSearch" class="app-welcome-search"></search>
+
+    </div>
   </div>
 </template>
 
 <script>
 import Search from '@/components/Search'
+import LocalDB from '@/localDB/localDB.js'
 import omdb from '@/omdbSDK/omdb.js'
 
 export default {
   name: 'app',
   components: {
     'search': Search
+  },
+  mounted () {
+    let user = this.$store.getters.user
+    let searchedTerms = LocalDB.getValue(user.SearchTermsDB)
+
+    if (searchedTerms && searchedTerms.length > 0) {
+      let lastSearch = searchedTerms[0]
+      this.triggerSearch(lastSearch)
+    }
   },
   methods: {
     triggerSearch (query, specs) {
@@ -70,6 +87,9 @@ export default {
       return {
         'with-back-btn': !this.isHomeScreen
       }
+    },
+    existingUser () {
+      return this.$store.getters.getMovies
     }
   }
 }
@@ -113,6 +133,45 @@ body {
   margin-top: 56px;
   display: flex;
   height: ~"calc(100% - 56px)";
+}
+
+.app-welcome{
+  height: 100%;
+  position: absolute;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+  line-height: 1.5;
+
+  .app-welcome-logo{
+    margin: 1rem;
+  }
+
+  .app-welcome-search{
+    margin: 1rem 1.5rem;
+  }
+}
+
+/* width */
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    background: black#f1f1f1;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: #888;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
 }
 
 @media (max-width: 768px){

@@ -10,8 +10,6 @@ if (!user) {
   user = LocalDB.createUserProfile()
 }
 
-console.log(user)
-
 export default new Vuex.Store({
   state: {
     movies: undefined,

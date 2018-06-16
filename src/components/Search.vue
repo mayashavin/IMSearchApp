@@ -8,12 +8,12 @@
             @keyup.enter="submit"
             @focus="focus"
             @keyup.13="submit">
-      <v-btn flat icon v-show="onFocus" id="close-search-btn" @click.prevent="close" small class="close-btn">
+      <v-btn flat icon v-show="onFocus" id="close-search-btn" @click.prevent="close" small class="close-btn white--text">
         <v-icon small>close</v-icon>
       </v-btn>
     </div>
   </div>
-  <v-card class="searchbox-sticky-section grey darken-4" v-show="onFocus">
+  <v-card class="searchbox-sticky-section grey darken-4 white--text" v-show="onFocus">
     <div class="advanced-search-box">
       <div class="searchbox-lastSearch-heading-wrapper">
         <div class="searchbox-lastSearch-heading">Filter by year</div>
@@ -64,6 +64,7 @@ export default {
     submit () {
       this.onFocus = false
       this.$emit('search-query', this.query, { byYear: this.year })
+      document.getElementById('search-box--input').blur()
     },
     focus () {
       this.onFocus = true
@@ -157,6 +158,8 @@ export default {
     width: 100%;
     z-index: 6;
     padding: 0 1rem;
+    max-height:20rem;
+    overflow-y: auto;
   }
 
   .searchbox-lastSearch-heading-wrapper{
