@@ -31,6 +31,8 @@
 #Version
 1.0
 
+[DEMO](https://mayashavin.github.io/IMSearchApp/)
+
 ## Build Setup
 
 ``` bash
