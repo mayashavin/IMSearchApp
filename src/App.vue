@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <v-app dark class="white--text" v-show="existingUser">
+    <v-app dark class="white--text" v-show="existingUser || !isHomeScreen">
       <v-toolbar fixed flat class="app-toolbar" :class="{'only-search-btn': !backBtnVisible && !isHomeScreen}">
         <v-btn icon flat v-if="!isHomeScreen && backBtnVisible" @click.prevent="back">
           <v-icon>arrow_back_ios</v-icon>
@@ -15,7 +15,7 @@
         <router-view></router-view>
       </main>
     </v-app>
-    <div class="app-welcome black" v-show="!existingUser">
+    <div class="app-welcome black" v-show="!existingUser && isHomeScreen">
       <img class="app-welcome-logo" src="./assets/logo.png"/>
       <h3 class="white--text">Welcome to IM Search</h3>
       <div class="grey--text">Click on search to start</div>
@@ -41,7 +41,7 @@ export default {
     }
   },
   mounted () {
-    if (this.isHomeScreen) {
+    if (['home'].indexOf(this.$route.name) !== -1) {
       let user = this.$store.getters.user
       let searchedTerms = LocalDB.getValue(user.SearchTermsDB)
 
