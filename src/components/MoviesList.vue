@@ -47,13 +47,21 @@ export default {
     sortedMovies () {
       let sorted = [].concat(this.movies)
 
-      if (this.sortAlpha) {
-        sorted = sorted.sort((movieA, movieB) => movieA.Title.localeCompare(movieB.Title))
-      }
+      sorted = sorted.sort((movieA, movieB) => {
+        let compareTitle = movieA.Title.localeCompare(movieB.Title)
+        let compareYear = movieB.Year - movieA.Year
+        let result = 1
 
-      if (this.sortByYear) {
-        sorted = sorted.sort((movieA, movieB) => movieB.Year - movieA.Year)
-      }
+        if (this.sortAlpha && this.sortByYear) {
+          result = compareTitle && compareYear
+        } else if (this.sortAlpha) {
+          result = compareTitle
+        } else if (this.sortByYear) {
+          result = compareYear
+        }
+
+        return result
+      })
 
       return sorted
     }
