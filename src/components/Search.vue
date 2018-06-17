@@ -63,7 +63,7 @@ export default {
   methods: {
     submit () {
       this.onFocus = false
-      this.$emit('search-query', this.query, { byYear: this.year })
+      this.$emit('search-query', this.query, { byYear: this.year, redirectToHome: true })
       this.$emit('toogle-back-btn', !this.onFocus)
       document.getElementById('search-box--input').blur()
     },

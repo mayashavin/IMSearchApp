@@ -41,20 +41,22 @@ export default {
     }
   },
   mounted () {
-    if (['home'].indexOf(this.$route.name) !== -1) {
-      let user = this.$store.getters.user
-      let searchedTerms = LocalDB.getValue(user.SearchTermsDB)
+    // if (this.isHomeScreen) {
+    let user = this.$store.getters.user
+    let searchedTerms = LocalDB.getValue(user.SearchTermsDB)
 
-      if (searchedTerms && searchedTerms.length > 0) {
-        let lastSearch = searchedTerms[0]
-        this.triggerSearch(lastSearch)
-      }
+    if (searchedTerms && searchedTerms.length > 0) {
+      let lastSearch = searchedTerms[0]
+      this.triggerSearch(lastSearch, { redirectToHome: this.isHomeScreen })
     }
+    // }
   },
   methods: {
     triggerSearch (query, specs) {
       if (query) {
-        this.$router.push('/')
+        if (specs.redirectToHome) {
+          this.$router.push('/')
+        }
 
         window.scroll({
           top: 0,
