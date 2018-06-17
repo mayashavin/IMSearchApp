@@ -112,7 +112,7 @@
       </div>
     </v-card>
     <progress-bar :onShow="onLoad" :msg="loadMsg"></progress-bar>
-    <div class="movie-view-actions-wrapper" :class="actionsShowClass">
+    <div class="movie-view-actions-wrapper" :class="actionsShowClass" v-show="!onLoad">
       <v-btn fab dark small color="orange darken-3" class="movie-view-action-btn"
             tooltip="Buy ticket" @click.prevent="orderTicket" v-if="comingSoon">
         <v-icon dark class="movie-view-action-icon">local_play</v-icon>
