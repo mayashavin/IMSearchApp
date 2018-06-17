@@ -41,12 +41,14 @@ export default {
     }
   },
   mounted () {
-    let user = this.$store.getters.user
-    let searchedTerms = LocalDB.getValue(user.SearchTermsDB)
+    if (this.isHomeScreen) {
+      let user = this.$store.getters.user
+      let searchedTerms = LocalDB.getValue(user.SearchTermsDB)
 
-    if (searchedTerms && searchedTerms.length > 0) {
-      let lastSearch = searchedTerms[0]
-      this.triggerSearch(lastSearch)
+      if (searchedTerms && searchedTerms.length > 0) {
+        let lastSearch = searchedTerms[0]
+        this.triggerSearch(lastSearch)
+      }
     }
   },
   methods: {

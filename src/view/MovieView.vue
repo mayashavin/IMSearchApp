@@ -279,7 +279,7 @@ export default {
     },
     comingSoon () {
       let comingSoon = false
-      const MS_PER_DAY = 1000 * 36 * 24
+      const MS_PER_DAY = 1000 * 3600 * 24
       const period = 15
 
       if (this.movie.Released) {
