@@ -1,5 +1,5 @@
 let setURL = (data) => {
-  let url = `http://www.omdbapi.com/?apikey=5f5e33d6`
+  let url = `https://www.omdbapi.com/?apikey=5f5e33d6`
 
   for (let [key, value] of data) {
     url += `&${key}=${value}`
