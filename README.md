@@ -9,7 +9,7 @@
 > 6. TBD
 > It is responsive web app, served both in mobile and desktop.
 
-#Technologies
+## Technologies
 > VueJS
 > Vuex
 > Vue Router (Routing)
@@ -17,7 +17,7 @@
 > LESS (CSS Pre-compiler)
 > Local Storage (for testing)
 
-#Features
+## Features
 > 1. Search for movie/TV Show/Game by title based on [IMDB API](http://www.omdbapi.com/)
 > 2. User can search in addition a specific year to get more accurate result.
 > 3. User can sort the result list by alphabet (A-Z) or by release year or both.
@@ -28,7 +28,7 @@
 > 8. User's favorites and past searched terms will be saved on the same device browser but currently will not be synchronized with other devices of the same user. Supported feature will come later.
 > 9. TBD
 
-#Version
+## Version
 1.0
 
 [DEMO](https://mayashavin.github.io/IMSearchApp/)
