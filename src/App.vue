@@ -1,15 +1,15 @@
 <template>
   <div id="app">
     <v-app dark class="white--text" v-show="existingUser">
-      <v-toolbar fixed flat class="app-toolbar">
-        <v-btn icon flat v-if="!isHomeScreen" @click.prevent="back">
+      <v-toolbar fixed flat class="app-toolbar" :class="{'only-search-btn': !backBtnVisible && !isHomeScreen}">
+        <v-btn icon flat v-if="!isHomeScreen && backBtnVisible" @click.prevent="back">
           <v-icon>arrow_back_ios</v-icon>
         </v-btn>
-        <v-toolbar-title class="app-title">
+        <v-toolbar-title class="app-title" v-show="isHomeScreen">
           <img class="app-title-logo" alt="IMSearch Logo" src="./assets/logo_32.png"/>
           <div>IMSearch App</div>
         </v-toolbar-title>
-        <search v-on:search-query="triggerSearch" :class="searchExtraClass"></search>
+        <search v-on:search-query="triggerSearch" :class="searchExtraClass" v-on:toogle-back-btn="toogleBackBtn"></search>
       </v-toolbar>
       <main id="main-app-container" class="main">
         <router-view></router-view>
@@ -35,6 +35,11 @@ export default {
   components: {
     'search': Search
   },
+  data () {
+    return {
+      backBtnVisible: true
+    }
+  },
   mounted () {
     let user = this.$store.getters.user
     let searchedTerms = LocalDB.getValue(user.SearchTermsDB)
@@ -57,6 +62,7 @@ export default {
 
         this.$store.commit('updateOnSearching', true)
         this.$store.commit('updateSearchedTerm', { query })
+        this.$store.commit('toogleExistingUser', true)
 
         let data = new Map([['s', query]])
 
@@ -77,11 +83,14 @@ export default {
       } else {
         this.$router.push('/')
       }
+    },
+    toogleBackBtn (status) {
+      this.backBtnVisible = status
     }
   },
   computed: {
     isHomeScreen () {
-      return ['movie'].indexOf(this.$route.name) === -1
+      return ['home'].indexOf(this.$route.name) !== -1
     },
     searchExtraClass () {
       return {
@@ -89,7 +98,7 @@ export default {
       }
     },
     existingUser () {
-      return this.$store.getters.getMovies
+      return this.$store.getters.isExistingUser
     }
   }
 }
@@ -116,6 +125,12 @@ body {
 
   .toolbar__content{
     justify-content: space-between;
+  }
+
+  &.only-search-btn{
+    .toolbar__content{
+      justify-content: flex-end;
+    }
   }
 }
 

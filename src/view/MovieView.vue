@@ -332,6 +332,8 @@ export default {
         id: this.id,
         isAdd: this.isFavorite
       })
+
+      this.$store.commit('updateMovies', this.$store.getters.getMovies)
     }
   }
 }

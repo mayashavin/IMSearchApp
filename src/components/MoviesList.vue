@@ -1,5 +1,9 @@
 <template>
   <div class="movies-list--wrapper">
+    <div class="movies-list-sort-options" v-show="movies && movies.length > 0">
+      <v-switch :label="`A-Z`" id="movies-sort-by-alpha" color="green darken-1" class="movies-list-sort-btn" v-model="sortAlpha"></v-switch>
+      <v-switch :label="`By year`" id="movies-sort-by-year" color="green darken-1" class="movies-list-sort-btn" v-model="sortByYear"></v-switch>
+    </div>
     <div class="movies-list--container" v-if="movies && movies.length > 0">
       <movie-card v-for="movie in sortedMovies" :key="movie.imdbID" :movie="movie" class="movies-list-item"></movie-card>
     </div>
@@ -28,42 +32,33 @@ export default {
   },
   data () {
     return {
-      onSortOption: {
-        show: false,
-        options: {
-          alphaSort: false,
-          yearSort: false
-        }
-      },
-      scrollTopVisible: false
+      sortAlpha: false,
+      scrollTopVisible: false,
+      sortByYear: false
     }
   },
   computed: {
     displayMsg () {
-      return this.movies ? (this.movies.error ? this.movies.error : 'No result found.') : 'Your movie list is empty.<br>Click on searh to start'
+      return this.movies ? (this.movies.error ? this.movies.error : 'No result found.') : 'Your movie list is empty.<br>Click on search to start'
     },
     displayIcon () {
       return this.movies ? 'sentiment_very_dissatisfied' : 'local_activity'
     },
-    sortBtnClass () {
-      return {
-        'sort-op-btn-active': this.onSortOption.show
-      }
-    },
     sortedMovies () {
-      return this.movies
+      let sorted = [].concat(this.movies)
+
+      if (this.sortAlpha) {
+        sorted = sorted.sort((movieA, movieB) => movieA.Title.localeCompare(movieB.Title))
+      }
+
+      if (this.sortByYear) {
+        sorted = sorted.sort((movieA, movieB) => movieB.Year - movieA.Year)
+      }
+
+      return sorted
     }
   },
   methods: {
-    toggleSortOption () {
-      this.onSortOption.show = !this.onSortOption.show
-    },
-    toggleSortByAlpha () {
-      this.onSortOption.options.alphaSort = !this.onSortOption.options.alphaSort
-    },
-    toggleSortByYear () {
-      this.onSortOption.options.yearSort = !this.onSortOption.options.yearSort
-    },
     isAtTop () {
       let main = document.getElementById('main-app-container')
 
@@ -83,7 +78,7 @@ export default {
   }
 }
 </script>
-<style lang="less" scoped>
+<style lang="less">
 .movies-list--wrapper{
   height: 100%;
 
@@ -125,6 +120,24 @@ export default {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
   }
+
+.movies-list-sort-btn {
+  display:flex;
+  .input-group__details {
+    min-height:0;
+  }
+}
+
+.movies-list-sort-options{
+  display:flex;
+  text-transform: uppercase;
+  align-items: center;
+  margin: 1rem 1rem 0 1rem;
+
+  label{
+    color:#9e9e9e !important;
+  }
+}
 
 @media (max-width: 768px){
   .movies-list--container{

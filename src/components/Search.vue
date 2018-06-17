@@ -64,14 +64,17 @@ export default {
     submit () {
       this.onFocus = false
       this.$emit('search-query', this.query, { byYear: this.year })
+      this.$emit('toogle-back-btn', !this.onFocus)
       document.getElementById('search-box--input').blur()
     },
     focus () {
       this.onFocus = true
+      this.$emit('toogle-back-btn', !this.onFocus)
     },
     close () {
       this.onFocus = false
       this.query = ''
+      this.$emit('toogle-back-btn', !this.onFocus)
     },
     clear () {
       let query = ''

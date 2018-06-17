@@ -5,8 +5,10 @@ import LocalDB from '@/localDB/localDB.js'
 Vue.use(Vuex)
 
 let user = LocalDB.getValue(LocalDB.userField)
+let isExistingUser = true
 
 if (!user) {
+  isExistingUser = !isExistingUser
   user = LocalDB.createUserProfile()
 }
 
@@ -18,7 +20,8 @@ export default new Vuex.Store({
     searchedTerms: LocalDB.getValue(user.SearchTermsDB),
     favorites: LocalDB.getValue(user.FavoriteDB),
     stack: [],
-    isGoingBack: false
+    isGoingBack: false,
+    isExistingUser: isExistingUser
   },
   mutations: {
     updateMovies (state, movies) {
@@ -78,6 +81,9 @@ export default new Vuex.Store({
     },
     toogleGoingBack (state, shouldGoBack) {
       state.isGoingBack = shouldGoBack
+    },
+    toogleExistingUser (state, isExisted) {
+      state.isExistingUser = isExisted
     }
   },
   getters: {
@@ -87,6 +93,7 @@ export default new Vuex.Store({
     searchedTerms: state => state.searchedTerms,
     favorites: state => state.favorites,
     stack: state => state.stack,
-    isGoingBack: state => state.isGoingBack
+    isGoingBack: state => state.isGoingBack,
+    isExistingUser: state => state.isExistingUser
   }
 })
