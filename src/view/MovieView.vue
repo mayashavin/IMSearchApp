@@ -563,7 +563,7 @@ export default {
 }
 
 .movie-square-label{
-  border-radius: 20%;
+  border-radius: 20% !important;
 }
 
 .movie-view-actions-wrapper{

@@ -110,7 +110,7 @@ export default {
   }
 }
 </script>
-<style lang="less" scoped>
+<style lang="less">
 .search-box-wrapper{
   width: 100%;
   max-width: 700px;
