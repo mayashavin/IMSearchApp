@@ -54,7 +54,7 @@ export default {
   data () {
     return {
       query: '',
-      defaultPlaceholder: 'Search for movies by title',
+      defaultPlaceholder: 'Search for movies, TV shows by title',
       onFocus: false,
       year: '',
       yearPlaceholder: 'Search by year'
